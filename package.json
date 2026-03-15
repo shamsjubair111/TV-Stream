@@ -7,9 +7,17 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "hls.js": "^1.6.15",
+    "http-proxy-middleware": "^3.0.5",
+    "m3u8-parser": "^7.2.0",
+    "node-fetch": "^2.7.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-scripts": "5.0.1",
+    "video.js": "^8.23.7",
+    "videojs-contrib-hls": "^5.15.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
