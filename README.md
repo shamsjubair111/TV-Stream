@@ -1,70 +1,190 @@
-# Getting Started with Create React App
+# 📺 TV-Stream — BD Live TV Player
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based live IPTV player for Bangladeshi, Indian, and International channels. Streams HLS (`.m3u8`) channels through a local Express proxy server to bypass CORS restrictions.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🖥️ Preview
 
-### `npm start`
+> Browse 170+ live channels, search by name, filter by category, and watch directly in the browser using a built-in HLS video player.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## ✨ Features
 
-### `npm test`
+- 🔴 **Live HLS streaming** via video.js
+- 🔁 **Local proxy server** to bypass CORS and geo-restrictions
+- 📋 **170+ channels** auto-loaded from a public M3U playlist
+- 🔍 **Search** channels by name in real time
+- 🗂️ **Category filters** — Bangla News, Entertainment, Music, Sports, Kids, International, and more
+- 🧹 **Auto-deduplication** — picks the best stream source per channel
+- ⚠️ **Error handling** — shows a message if a stream is unavailable
+- 📱 **Responsive** layout for desktop and mobile
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🗂️ Project Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+TV-Stream/
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── Player.js        # HLS video player (video.js)
+│   │   ├── ChannelGrid.js   # Channel card grid
+│   │   └── ChannelList.js   # Channel list view
+│   ├── utils/
+│   │   └── loadChannels.js  # Fetches & parses M3U playlist
+│   ├── App.js               # Main app — search, filter, state
+│   ├── App.css              # Styling
+│   └── index.js
+├── server.js                # Express CORS proxy server
+├── package.json
+└── README.md
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 Getting Started
 
-### `npm run eject`
+### Prerequisites
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- [Node.js](https://nodejs.org/) v16 or higher
+- npm
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+# Clone the repository
+git clone https://github.com/shamsjubair111/TV-Stream.git
+cd TV-Stream
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Install React app dependencies
+npm install
 
-## Learn More
+# Install proxy server dependencies
+npm install express cors
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ▶️ Running the App
 
-### Code Splitting
+You need **two terminals** running at the same time.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**Terminal 1 — Start the proxy server:**
+```bash
+node server.js
+```
+> Proxy will run at `http://localhost:3001`
 
-### Analyzing the Bundle Size
+**Terminal 2 — Start the React app:**
+```bash
+npm start
+```
+> App will open at `http://localhost:3000`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## ⚙️ How It Works
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+Browser (React)
+    │
+    │  requests M3U playlist
+    ▼
+loadChannels.js  ──────────►  GitHub Raw M3U file
+    │
+    │  parses 170+ channels
+    ▼
+ChannelGrid (UI)
+    │
+    │  user clicks a channel
+    ▼
+Player.js
+    │
+    │  sends stream URL to proxy
+    ▼
+server.js (localhost:3001)
+    │
+    │  forwards request with VLC headers
+    │  rewrites M3U8 segment URLs
+    ▼
+IPTV Stream Server  ──────►  video.js plays the stream
+```
 
-### Advanced Configuration
+**Why a proxy?**
+IPTV stream servers block direct browser requests (CORS policy). The local Express server fetches the stream server-side, spoofing a VLC media player identity, and pipes the response back to the browser with CORS headers added. It also rewrites all `.ts` segment URLs inside M3U8 playlists so every request goes through the proxy.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 📡 Channel Categories
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+| Category | Examples |
+|---|---|
+| Bangla News | Somoy TV, Jamuna TV, DBC News, News 24, Independent TV |
+| Bangla Entertainment | GTV, Maasranga, NTV, Channel I, Deepto TV, Desh TV |
+| Bangla Music | Gaan Bangla, Sangeet Bangla, ATN Music |
+| Indian Entertainment | Star Plus, Star Jalsha, Zee TV, Colors, Sony TV |
+| Sports | Star Sports, Sony Ten, DD Sports, PTV Sports |
+| Kids | Nickelodeon, Cartoon Network, Disney, CBeebies |
+| International News | BBC World, CNN, Al Jazeera, DW, NDTV |
+| Movies | Star Gold, Zee Cinema, Sony Max, B4U Movies |
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 |
+| Video Player | video.js |
+| Proxy Server | Node.js + Express |
+| Stream Format | HLS (M3U8) |
+| Styling | Plain CSS |
+| Channel Source | Public M3U Playlist |
+
+---
+
+## ⚠️ Troubleshooting
+
+**Channels not loading**
+- Make sure you have an internet connection
+- Open browser DevTools (F12) → Console and check for errors
+
+**Stream shows error / 502 Bad Gateway**
+- Make sure `node server.js` is running in a separate terminal
+- Some streams are geo-restricted or offline — try a different channel
+- Test a stream directly: `http://localhost:3001/proxy?url=<encoded-stream-url>`
+
+**`insertBefore` React error**
+- Hard refresh the page: `Ctrl + Shift + R`
+
+**Port already in use**
+```bash
+# Kill whatever is using port 3001
+npx kill-port 3001
+node server.js
+```
+
+---
+
+## 📝 Notes
+
+- This project is for **personal/educational use only**
+- Stream availability depends on the source M3U playlist and your ISP
+- Some channels may be geo-restricted in certain regions
+- The proxy server must be running locally — it is not deployed
+
+---
+
+## 📄 License
+
+MIT License — feel free to use and modify.
+
+---
+
+## 👤 Author
+
+**Shams Jubair**
+- GitHub: [@shamsjubair111](https://github.com/shamsjubair111)
